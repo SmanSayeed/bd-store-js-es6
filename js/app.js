@@ -18,7 +18,11 @@ const setProductModal = (product) => {
       <h3>${product.title}</h3>
       <p>Category: ${product.category}</p>
       <p>Description: ${product.description}</p>
-      <p>People rated: ${product.rating.count}, Average Rating: ${product.rating.rate}, </p>
+      <div class="rate">
+        Average Rating: 
+        ${star(product.rating.rate)}(${product.rating.rate})
+        <p>Rated by ${product.rating.count} People</p>
+      </div>
       <h2>Price: $ ${product.price}</h2>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
 
@@ -33,6 +37,50 @@ const getSingleProductData = (id) =>{
   fetch(`https://fakestoreapi.com/products/${id}`)
             .then(res=>res.json())
             .then(json=>setProductModal(json))
+}
+
+/* Star rating */
+const star = (rate) => {
+
+  let i = 1;
+  let rateHTML = '';
+  let decimal = (rate.toFixed(1) + "").split(".");
+  decimal = decimal[1];
+  rate = Math.round(rate)
+  console.log(rate+'- -'+decimal);
+  let icon = '';
+
+  const fullStar = '<i class="rating__star fas fa-star"></i>';
+  const halfStar = '<i class="rating__star fas fa-star-half-alt"></i>';
+  const noStar = '<i class="rating__star far fa-star"></i>'
+
+  for(i=1;i<=5;i++){
+    console.log('i = '+i+' rate = '+rate+' decimal = '+decimal)
+    if(rate===0){
+      icon = noStar;
+    }
+
+    if(rate!==0 && i<=rate){
+  
+      if(decimal!==0 && decimal<=5 && i===rate){
+           icon= halfStar
+      }else{
+          icon= fullStar
+      }
+    
+    }
+
+    if(i>rate){
+      icon=noStar;
+    }
+
+  
+    rateHTML += icon;
+    console.log(rateHTML);
+  
+}
+  // console.log(div);
+  return rateHTML ;
 }
 
 
@@ -53,12 +101,12 @@ const showProducts = (products) => {
       <h3>${product.title}</h3>
       <p>Category: ${product.category}</p>
       <h2>Price: $ ${product.price}</h2>
-      <p>People rated: ${product.rating.count}</p>
-      <p>Average Rating: ${product.rating.rate} </p>
- 
-      <br>
-      
-      
+    
+      <div class="rate">
+        Average Rating: 
+        ${star(product.rating.rate)}(${product.rating.rate})
+        <p>Rated by ${product.rating.count} People</p>
+      </div>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
 
 
